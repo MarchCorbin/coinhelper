@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import React, {Component} from 'react'
 import './App.css';
+import { fetchBTCPrice } from './ApiCalls';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+constructor() {
+  super()
+  this.state = {
+    BTC: null
+  }
+}
+// componentDidMount = async() => {
+//    fetchBTCPrice()
+//    .then(data => {this.setState({BTC: data[0].price})})
+//   //  .then(data => console.log(data[0].price))
+//  }
+
+componentDidMount() {
+  fetchBTCPrice()
+    .then(data => {this.setState({BTC: Number(data[0].price).toFixed(2)})})
+  setInterval(() => {
+    fetchBTCPrice()
+    .then(data => {this.setState({BTC: Number(data[0].price).toFixed(2)})})
+  }, 10000);
+}
+
+ render() {
+   return (
+     <div className="App">
+       <h1>Coin Helper</h1>
+ 
+       <div className='price-section'>
+   <h1>BTC: ${this.state.BTC}</h1>
+       </div>
+     </div>
+   );
+ }
 }
 
 export default App;
